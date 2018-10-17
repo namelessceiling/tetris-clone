@@ -1,37 +1,40 @@
+import java.awt.Color;
 import java.util.Random;
 
 public class Shape
 {
-    enum Tetrominos
+    enum Tetrominoes
     {
-        NoShape(new int[][] {{0, 0}, {0, 0}, {0, 0}, {0, 0}}),
-        ZShape(new int[][] {{0, -1}, {0, 0}, {-1, 0}, {-1, 1}}),
-        SShape(new int[][] {{0, -1}, {0, 0}, {1, 0}, {1, 1}}),
-        LineShape(new int[][] {{0, -1}, {0, 0}, {0, 1}, {0, 2}}),
-        TShape(new int[][] {{-1, 0}, {0, 0}, {1, 0}, {0, 1}}),
-        SquareShape(new int[][] {{0, 0}, {1, 0}, {0, 1}, {1, 1}}),
-        LShape(new int[][] {{-1, -1}, {0, -1}, {0, 0}, {0, 1}}),
-        MirroredLShape(new int[][] {{1, -1}, {0, -1}, {0, 0}, {0, 1}});
-
-        private int[][] coords;
-
-        private Tetrominos(int [][] coords)
+        //blank space if no tetromino
+        NoShape(new int[][] { { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } }, new Color(0, 0, 0)),
+        ZShape(new int[][] { { 0, -1 }, { 0, 0 }, { -1, 0 }, { -1, 1 } }, new Color(204, 102, 102)),
+        SShape(new int[][] { { 0, -1 }, { 0, 0 }, { 1, 0 }, { 1, 1 } }, new Color(102, 204, 102)),
+        LineShape(new int[][] { { 0, -1 }, { 0, 0 }, { 0, 1 }, { 0, 2 } }, new Color(102, 102, 204)),
+        TShape(new int[][] { { -1, 0 }, { 0, 0 }, { 1, 0 }, { 0, 1 } }, new Color(204, 204, 102)),
+        SquareShape(new int[][] { { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 } }, new Color(204, 102, 204)),
+        LShape(new int[][] { { -1, -1 }, { 0, -1 }, { 0, 0 }, { 0, 1 } }, new Color(102, 204, 204)),
+        MirroredLShape(new int[][] { { 1, -1 }, { 0, -1 }, { 0, 0 }, { 0, 1 } }, new Color(218, 170, 0));
+        public int[][] coords;
+        public Color color;
+        Tetrominoes(int[][] coords, Color c)
         {
             this.coords = coords;
+            color = c;
         }
     }
-    private Tetrominos pieceShape;
-    private int [][] coords;
 
+    private Tetrominoes pieceShape;
+    private int[][] coords;
+    //Constructor
     public Shape()
     {
-        coords = new int[4][2];
-        setShape(Tetrominos.NoShape);
+        coords = new int[4][2]; //Tetrominos have a max length/height of 4 and a min of 2
+        setShape(Tetrominoes.NoShape);
     }
 
-    public void setShape(Tetrominos shape)
+    public void setShape(Tetrominoes shape)
     {
-        for(int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
             for(int j = 0; j < 2; ++j)
             {
@@ -51,45 +54,77 @@ public class Shape
         coords[index][1] = y;
     }
 
-    private int x(int index)
+    public int x(int index)
     {
         return coords[index][0];
     }
 
-    private int y(int index)
+    public int y(int index)
     {
         return coords[index][1];
     }
 
-    public Tetrominos getShape()
+    public Tetrominoes getShape()
     {
         return pieceShape;
     }
 
     public void setRandomShape()
     {
-        Random random = new Random();
-        int x = Math.abs(random.nextInt()) % 7 + 1;
-        Tetrominos [] values =  Tetrominos.values();
+        Random r = new Random();
+        int x = Math.abs(r.nextInt()) % 7 + 1;  //randomizes which shape to get
+        Tetrominoes[] values = Tetrominoes.values();
         setShape(values[x]);
     }
 
     public int minX()
     {
-        int min = coords[0][0];
+        int m = coords[0][0];
         for(int i = 0; i < 4; i++)
         {
-            min = Math.min(min, coords[i][0]);
+            m = Math.min(m, coords[i][0]);
         }
-        return min;
+        return m;
     }
 
     public int minY()
     {
-        int min = coords[0][1];
-        for(int i = 0; i < 4; i++){
-            min = Math.min(min, coords[i][1]);
+        int m = coords[0][1];
+        for(int i = 0; i < 4; i++)
+        {
+            m = Math.min(m, coords[i][1]);
         }
-        return min;
+        return m;
+    }
+
+    public Shape rotateLeft() {
+        if(pieceShape == Tetrominoes.SquareShape)
+        {
+            return this;
+        }
+        Shape result = new Shape();
+        result.pieceShape = pieceShape;
+        for (int i = 0; i < 4; i++)
+        {
+            result.setX(i, y(i));
+            result.setY(i, -x(i));
+        }
+        return result;
+    }
+
+    public Shape rotateRight()
+    {
+        if(pieceShape == Tetrominoes.SquareShape)
+        {
+            return this;
+        }
+        Shape result = new Shape();
+        result.pieceShape = pieceShape;
+        for (int i = 0; i < 4; i++)
+        {
+            result.setX(i, -y(i));
+            result.setY(i, x(i));
+        }
+        return result;
     }
 }
