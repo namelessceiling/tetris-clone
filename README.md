@@ -14,7 +14,7 @@ Instructions
 -------------
 Compile by typing into the terminal the lines : javac Shape.java Well.java Tetris.java
 
-Run it by typing into the terminal : java Tetris.java
+Run it by typing into the terminal : java Tetris
 
 
 The left and right arrow keys moves the tetrominoes left and right while the up and down keys rotate them. To pause the game press p, to make the tetromino fall down faster, press d. (It doesn't matter whether it's an uppercase or lowercase p)
